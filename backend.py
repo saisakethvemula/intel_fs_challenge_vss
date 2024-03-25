@@ -71,8 +71,8 @@ def get_graph_data():
 def get_table_data():
     try:
         #table data
-        query_pipeline = [{"$project": {"_id": 0, "processor_id": 1, "name": 1, "product_collection": "$Essentials.Product Collection", \
-            "status": "$Essentials.Status", "vertical_segment": "$Essentials.Vertical Segment", "num_cores": "$Performance.# of Cores", \
+        query_pipeline = [{"$project": {"_id": 0, "processor_id": {"$toInt": "$processor_id"}, "name": 1, "product_collection": "$Essentials.Product Collection", \
+            "status": "$Essentials.Status", "vertical_segment": "$Essentials.Vertical Segment", "launch_date": "$Essentials.Launch Date", "num_cores": {"$toInt":"$Performance.# of Cores"}, \
             "base_frequency": "$Performance.Processor Base Frequency", "cache": "$Performance.Cache", "tdp": "$Performance.TDP", \
             "lithography": "$Essentials.Lithography", "instruction_set": "$Advanced Technologies.Instruction Set"}}]
         data = list(collection.aggregate(query_pipeline))
