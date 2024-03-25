@@ -12,7 +12,7 @@ collection = db.processor_config
 #inserting data into collection
 # with open(r"./API_DATA.json") as f:
 #     json_data = json.load(f)
-# data_list = [v for k, v in json_data.items()]
+# data_list = [{"processor_id": k, **v} for k, v in json_data.items()]
 # print(data_list[0:10])
 # _ = collection.delete_many({})
 # result = collection.insert_many(data_list)
@@ -62,6 +62,21 @@ def get_graph_data():
             processor_statuses[status] = processor_statuses.get(status, 0) + 1
 
         return jsonify({"bardata":[prod_collection, cores_collection], "piedata":processor_statuses}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/table', methods=['GET'])
+def get_table_data():
+    try:
+        #table data
+        query_pipeline = [{"$project": {"_id": 0, "processor_id": 1, "name": 1, "product_collection": "$Essentials.Product Collection", \
+            "status": "$Essentials.Status", "vertical_segment": "$Essentials.Vertical Segment", "num_cores": "$Performance.# of Cores", \
+            "base_frequency": "$Performance.Processor Base Frequency", "cache": "$Performance.Cache", "tdp": "$Performance.TDP", \
+            "lithography": "$Essentials.Lithography", "instruction_set": "$Advanced Technologies.Instruction Set"}}]
+        data = list(collection.aggregate(query_pipeline))
+        return jsonify(data), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

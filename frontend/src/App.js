@@ -8,7 +8,7 @@ import {
 import Navbar from "./components/Navbar";
 import Dashboard from './pages/Dashboard';
 import Graph from './pages/Graph';
-import Table from './pages/Table';
+import DataTable from './pages/Table';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={ <Dashboard/> } />
         <Route path="graph" element={ <Graph/> } />
-        <Route path="table" element={ <Table/> } />
+        <Route path="table" element={ <DataTable/> } />
       </Routes>
     </div>
   );

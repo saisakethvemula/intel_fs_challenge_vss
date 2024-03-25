@@ -68,7 +68,7 @@ const Graph = () => {
     const transformed_pie_data = [];
     var idd = 0
     for (const key in piedata) {
-        transformed_pie_data.push({ id: idd, value: piedata[key], label: key });
+        transformed_pie_data.push({ id: idd, value: piedata[key], label: key + "-" + piedata[key] });
         idd = idd+1;
     }
 
@@ -111,6 +111,7 @@ const Graph = () => {
                         ]}
                         width={800}
                         height={500}
+                        colors={["#4a5168", "#ffdab9", "#fa8072"]}
                     />
                 </Box>
                 </>
