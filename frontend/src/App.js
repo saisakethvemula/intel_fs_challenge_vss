@@ -8,7 +8,8 @@ import {
 import Navbar from "./components/Navbar";
 import Dashboard from './pages/Dashboard';
 import Graph from './pages/Graph';
-import DataTable from './pages/Table';
+import DataTable from './pages/DataTable';
+// import LazyLoadedDataTable from './pages/LazyTable';
 
 function App() {
   return (

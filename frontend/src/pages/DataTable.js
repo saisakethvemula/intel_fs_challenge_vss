@@ -289,7 +289,7 @@ export default function DataTable() {
     //     setRows(rows);
     // }, [tabledata]);
 
-    // console.log(tabledata);
+    console.log(tabledata);
     // const rows = tabledata.map(createData);
     // console.log(rows)
 
@@ -351,7 +351,7 @@ export default function DataTable() {
         [order, orderBy, page, rowsPerPage],
     );
 
-    return (
+    return rows ? (
         <>
         {loading ? (
                 <Box display="flex"
@@ -453,5 +453,5 @@ export default function DataTable() {
         </Box>
         )}
         </>
-    );
+    ) : null
 }
