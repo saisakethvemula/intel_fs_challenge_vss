@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard';
 import Graph from './pages/Graph';
 import DataTable from './pages/DataTable';
 // import LazyLoadedDataTable from './pages/LazyTable';
+import Table from './pages/Table'
+import NewTable from './pages/NewTable';
 
 function App() {
   return (
@@ -18,7 +20,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={ <Dashboard/> } />
         <Route path="graph" element={ <Graph/> } />
-        <Route path="table" element={ <DataTable/> } />
+        <Route path="table" element={ <NewTable/> } />
       </Routes>
     </div>
   );
