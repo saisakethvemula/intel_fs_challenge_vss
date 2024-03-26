@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Dashboard from './pages/Dashboard';
 import Graph from './pages/Graph';
 import NewTable from './pages/NewTable';
+import Processor from './pages/Processor';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/" element={ <Dashboard/> } />
         <Route path="graph" element={ <Graph/> } />
         <Route path="table" element={ <NewTable/> } />
+        <Route path="processor/:rowIDs" element={ <Processor/> }/>
       </Routes>
     </div>
   );

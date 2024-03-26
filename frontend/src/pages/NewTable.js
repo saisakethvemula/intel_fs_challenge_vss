@@ -4,6 +4,7 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import React, { useEffect, useState } from "react"
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -20,6 +21,7 @@ const statusList = ["Announced", "Discontinued", "Launched"]
 const NewTable = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -122,6 +124,12 @@ const NewTable = () => {
         download(csvConfig)(csv);
     };
 
+    const handleMoreDetails = (rows) => {
+        const rowIDs = rows.map((row) => row.original.processor_id);
+        // console.log(rowData)
+        navigate(`/processor/${rowIDs}`)
+    };
+
     const handleExportData = () => {
         const csv = generateCsv(csvConfig)(data);
         download(csvConfig)(csv);
@@ -177,6 +185,16 @@ const NewTable = () => {
             startIcon={<FileDownloadIcon />}
             >
             Export Selected Rows
+            </Button>
+            <Button
+            disabled={
+                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+            }
+            //only export selected rows
+            onClick={() => handleMoreDetails(table.getSelectedRowModel().rows)}
+            // startIcon={<FileDownloadIcon />}
+            >
+            View More Details
             </Button>
         </Box>
         ),

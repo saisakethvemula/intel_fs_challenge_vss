@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from pymongo import MongoClient, InsertOne
 import json
 
@@ -78,6 +78,17 @@ def get_table_data():
         data = list(collection.aggregate(query_pipeline))
         return jsonify(data), 200
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/processors/<processorIDs>', methods=['GET'])
+def get_processors(processorIDs):
+    try:
+        pids = processorIDs.split(",")
+        query_pipeline = [{"$match": {"processor_id": {"$in": pids}}}, \
+            {"$project": {"_id": 0}} ]
+        data = list(collection.aggregate(query_pipeline))
+        return jsonify(data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
