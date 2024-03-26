@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { axisClasses } from '@mui/x-charts';
@@ -28,7 +27,6 @@ const Graph = () => {
     const [error, setError] = useState(null);
     const [bardata, setBardata] = useState([]);
     const [piedata, setPiedata] = useState([]);
-    const [xlabels, setXlabels] = useState([]);
     const [ylabels, setYlabels] = useState([]);
 
     // fetching data from graph api using useEffect for both bar and pie charts
@@ -38,7 +36,6 @@ const Graph = () => {
                 const res = await axios.get('/graph');
                 setBardata(res.data["bardata"]);
                 setPiedata(res.data["piedata"]);
-                setXlabels(res.data["bardata"][0]);
                 setYlabels(res.data["bardata"][1]);
                 setLoading(false);
                 setError(null);
