@@ -128,12 +128,6 @@ const NewTable = () => {
     const handleMoreDetails = (rows) => {
         const rowIDs = rows.map((row) => row.original.processor_id);
         // console.log(rowData)
-        navigate(`/processor/${rowIDs}`)
-    };
-
-    const handleCompareDetails = (rows) => {
-        const rowIDs = rows.map((row) => row.original.processor_id);
-        // console.log(rowData)
         navigate(`/compare_processor/${rowIDs}`)
     };
 
@@ -198,10 +192,10 @@ const NewTable = () => {
                 !(table.getSelectedRowModel().rows.length === 2)
             }
             //only export selected rows
-            onClick={() => handleCompareDetails(table.getSelectedRowModel().rows)}
+            onClick={() => handleMoreDetails(table.getSelectedRowModel().rows)}
             // startIcon={<FileDownloadIcon />}
             >
-            View &amp; Compare
+            Compare Processors
             </Button>
             <Button
             disabled={
