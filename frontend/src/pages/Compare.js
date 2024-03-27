@@ -7,14 +7,7 @@ import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { mkConfig, generateCsv, download } from 'export-to-csv'; 
-
-const csvConfig = mkConfig({
-    fieldSeparator: ',',
-    decimalSeparator: '.',
-    useKeysAsHeaders: true,
-});
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const CompareTable = () => {
     const { rowIDs }= useParams();
@@ -45,7 +38,7 @@ const CompareTable = () => {
             }
         };
         fetch_table_data();
-    }, []);
+    }, [rowIDs]);
 
     const columns = useMemo(() => {
 		const keys = Object.keys(processors); // Get the keys of the main data object
@@ -92,9 +85,29 @@ const CompareTable = () => {
         enableColumnFilters: false,
         enablePagination: false,
         enableSorting: false,
+		renderTopToolbarCustomActions: ({ table }) => (
+			<Box
+				sx={{
+				display: 'flex',
+				gap: '16px',
+				padding: '8px',
+				flexWrap: 'wrap',
+				}}
+			>
+				<Button onClick={() => handleGoBack()}>
+                    <ArrowBackIcon />
+                </Button>
+			</Box>
+		),
     });
 
-    return <MaterialReactTable table={table} />;
+	const handleGoBack = () => {
+        navigate(`/table`)
+    };
+
+    return (
+			<MaterialReactTable table={table} />
+	);
 }
 
 export default CompareTable;
