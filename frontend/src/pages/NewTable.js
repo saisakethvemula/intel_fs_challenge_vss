@@ -188,13 +188,13 @@ const NewTable = () => {
             </Button>
             <Button
             disabled={
-                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                !(table.getSelectedRowModel().rows.length === 2)
             }
             //only export selected rows
             onClick={() => handleMoreDetails(table.getSelectedRowModel().rows)}
             // startIcon={<FileDownloadIcon />}
             >
-            View More Details
+            View &amp; Compare
             </Button>
         </Box>
         ),

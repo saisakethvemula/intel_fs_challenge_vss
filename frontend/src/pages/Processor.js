@@ -10,6 +10,8 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Processor = () => {
     const { rowIDs }= useParams();
@@ -17,6 +19,7 @@ const Processor = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [processors, setProcessors] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetch_processor_data = async () => {
@@ -54,10 +57,18 @@ const Processor = () => {
             </>
         ));
     };
-    const excludedKeys = ['name', 'processor_id'];
+
+    const handleGoBack = () => {
+        navigate(`/table`)
+    };
 
     return(
-        <>
+        <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 10, left: 10 }}>
+                <Button onClick={() => handleGoBack()}>
+                    <ArrowBackIcon />
+                </Button>
+            </div>
             {loading ? (
                 <Box display="flex"
                 justifyContent="center"
@@ -82,7 +93,7 @@ const Processor = () => {
                 ))}
                 </div>
             )}
-        </>
+        </div>
     );
 }
 
