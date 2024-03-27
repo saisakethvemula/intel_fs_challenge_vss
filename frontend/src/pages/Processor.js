@@ -50,7 +50,7 @@ const Processor = () => {
         .filter((key) => !excludedKeys.includes(key))
         .map((section, index) => (
             <>
-                <Card.Text as="h5">{section}:</Card.Text>
+                <Card.Text as="h4">{section}:</Card.Text>
                 {Object.entries(processor[section]).map(([key, value]) => (
                     <Card.Text sx={{fontsize: '14px'}} >{key}: {value}</Card.Text>
                 ))}
@@ -85,7 +85,7 @@ const Processor = () => {
                     <Card>
                         <Card.Header as="h4">{processor.name}</Card.Header>
                         <Card.Body>
-                            <Card.Title as="h5">Processor ID: {processor.processor_id}</Card.Title>
+                            <Card.Title as="h4">Processor ID: {processor.processor_id}</Card.Title>
                             {render_sections(processor)}
                         </Card.Body>
                     </Card>

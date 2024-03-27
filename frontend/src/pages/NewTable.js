@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import InfoIcon from '@mui/icons-material/Info';
 import { mkConfig, generateCsv, download } from 'export-to-csv'; 
 
 const csvConfig = mkConfig({
@@ -130,6 +131,12 @@ const NewTable = () => {
         navigate(`/processor/${rowIDs}`)
     };
 
+    const handleCompareDetails = (rows) => {
+        const rowIDs = rows.map((row) => row.original.processor_id);
+        // console.log(rowData)
+        navigate(`/compare_processor/${rowIDs}`)
+    };
+
     const handleExportData = () => {
         const csv = generateCsv(csvConfig)(data);
         download(csvConfig)(csv);
@@ -191,10 +198,20 @@ const NewTable = () => {
                 !(table.getSelectedRowModel().rows.length === 2)
             }
             //only export selected rows
-            onClick={() => handleMoreDetails(table.getSelectedRowModel().rows)}
+            onClick={() => handleCompareDetails(table.getSelectedRowModel().rows)}
             // startIcon={<FileDownloadIcon />}
             >
             View &amp; Compare
+            </Button>
+            <Button
+            disabled={
+                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+            }
+            //only export selected rows
+            onClick={() => handleMoreDetails(table.getSelectedRowModel().rows)}
+            // startIcon={<FileDownloadIcon />}
+            >
+                <InfoIcon/>
             </Button>
         </Box>
         ),

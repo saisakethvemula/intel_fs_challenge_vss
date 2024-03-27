@@ -92,5 +92,34 @@ def get_processors(processorIDs):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/compare_processors/<processorIDs>', methods=['GET'])
+def get_compare_processors(processorIDs):
+    try:
+        pids = processorIDs.split(",")
+        query_pipeline = [{"$match": {"processor_id": {"$in": pids}}}, \
+            {"$project": {"_id": 0}} ]
+        data = list(collection.aggregate(query_pipeline))
+        
+        main_features = list({feature for processor in data for feature in processor.keys()})
+
+        final_transformed = {}
+        
+        for feature in main_features:
+            if feature == "name" or feature == "processor_id":
+                continue
+            final_transformed[feature] = []
+            for item in data:
+                final_transformed[feature].append(item.get(feature, {}))
+        
+        final_transformed["Name"] = []
+        final_transformed["Processor ID"] = []
+        for processor in data:
+            final_transformed["Name"].append({"Name":processor["name"]})
+            final_transformed["Processor ID"].append({"Processor ID":processor["processor_id"]})
+
+        return jsonify(final_transformed), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
