@@ -19,7 +19,7 @@ const csvConfig = mkConfig({
     useKeysAsHeaders: true,
 });
 
-const NewTable = () => {
+const Table = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -218,4 +218,4 @@ const NewTable = () => {
     return <MaterialReactTable table={table} />;
 };
 
-export default NewTable;
+export default Table;

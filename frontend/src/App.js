@@ -7,8 +7,8 @@ import {
 import Navbar from "./components/Navbar";
 import Dashboard from './pages/Dashboard';
 import Graph from './pages/Graph';
-import NewTable from './pages/NewTable';
-import CompareTable from './pages/Compare';
+import Table from './pages/Table';
+import CompareTable from './pages/CompareTable';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={ <Dashboard/> } />
         <Route path="graph" element={ <Graph/> } />
-        <Route path="table" element={ <NewTable/> } />
+        <Route path="table" element={ <Table/> } />
         <Route path="processor/:rowIDs" element={ <CompareTable/> }/>
       </Routes>
     </div>
