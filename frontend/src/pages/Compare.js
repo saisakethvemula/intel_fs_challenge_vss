@@ -21,13 +21,15 @@ const CompareTable = () => {
     const navigate = useNavigate();
     // const [headers, setHeaders] = useState([]);
     const [processors, setProcessors] = useState([]);
+	const [data, setData] = useState([]);
 
     useEffect(() => {
         const fetch_table_data = async () => {
             try {
                 const res = await axios.get(`/compare_processors/${rowIDs}`);
                 // setHeaders(res.data["features"])
-                setProcessors(res.data);
+                setProcessors(res.data["processors"]);
+				setData(res.data["broken_processors"])
                 // setLoading(false);
                 // setError(null);
                 console.log(res.data);
@@ -46,30 +48,41 @@ const CompareTable = () => {
     }, []);
 
     const columns = useMemo(() => {
-      const keys = Object.keys(processors); // Get the keys of the main data object
-    
-      // Map over the keys and create columns for each section
-      return keys.map(key => {
-        const section = processors[key]; // Get the data for the current section
-        const subKeys = Object.keys(section[0]); // Get the keys of the first item in the section
-    
-        // Map over the subKeys and create columns for each property
-        const subColumns = subKeys.map(subKey => ({
-          accessorKey: subKey,
-          header: subKey,
-          size: 100
-        }));
-    
-        return {
-          id: key,
-          header: key,
-          columns: subColumns
-        };
-      });
+		const keys = Object.keys(processors); // Get the keys of the main data object
+
+		const moveToFront = (arr, key) => {
+			const index = arr.indexOf(key);
+			if (index > -1) {
+			  arr.splice(index, 1);
+			  arr.unshift(key);
+			}
+		};
+
+		moveToFront(keys, "Name");
+  		moveToFront(keys, "Processor ID");
+
+		// Map over the keys and create columns for each section
+		return keys.map(key => {
+			const section = processors[key]; // Get the data for the current section
+			const subKeys = Object.keys(section[0]); // Get the keys of the first item in the section
+			
+			// Map over the subKeys and create columns for each property
+			const subColumns = subKeys.map(subKey => ({
+			accessorKey: subKey,
+			header: subKey,
+			size: 100
+			}));
+			
+			return {
+			id: key,
+			header: key,
+			columns: subColumns
+			};
+		});
     }, [processors]);
 
     // const columns = []
-    const data = {}
+    // const data = {}
 
 
     const table = useMaterialReactTable({

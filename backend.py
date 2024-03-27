@@ -117,7 +117,20 @@ def get_compare_processors(processorIDs):
             final_transformed["Name"].append({"Name":processor["name"]})
             final_transformed["Processor ID"].append({"Processor ID":processor["processor_id"]})
 
-        return jsonify(final_transformed), 200
+        broken_data = []
+        for processor in data:
+            curr_processor  = {}
+            for feature, feature_info in processor.items():
+                if feature == "name":
+                    curr_processor["Name"] = processor["name"]
+                elif feature == "processor_id":
+                    curr_processor["Processor ID"] = processor["processor_id"]
+                else:
+                    for ad_feature, ad_feature_info in feature_info.items():
+                        curr_processor[ad_feature] = ad_feature_info
+            broken_data.append(curr_processor)
+
+        return jsonify({"processors": final_transformed, "broken_processors": broken_data}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
