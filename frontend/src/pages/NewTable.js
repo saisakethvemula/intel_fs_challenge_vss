@@ -51,25 +51,25 @@ const NewTable = () => {
     const columns = useMemo(
     () => [
         {
-            accessorKey: 'processor_id',
+            accessorKey: 'Processor ID',
             header: 'Processor ID',
             type: 'numeric',
             size: 40
         },
         {
-            accessorKey: 'name',
+            accessorKey: 'Processor Name',
             header: 'Processor Name',
             size: 200
         },
         {
-            accessorKey: 'status',
+            accessorKey: 'Status',
             header: 'Status',
             size: 40,
             filterVariant: 'select',
             filterSelectOptions: statusList,
         },
         {
-            accessorKey: 'num_cores',
+            accessorKey: 'Number of Cores',
             header: 'Number of Cores',
             type: 'numeric',
             size: 60,
@@ -77,41 +77,41 @@ const NewTable = () => {
             filterFn: 'between',
         },
         {
-            accessorKey: 'cache',
+            accessorKey: 'Cache',
             header: 'Cache',
             size: 40
         },
         {
-            accessorKey: 'base_frequency',
+            accessorKey: 'Base Frequency',
             header: 'Base Frequency',
             size: 40
         },
         {
-            accessorKey: 'lithography',
+            accessorKey: 'Lithography',
             header: 'Lithography',
             size: 40
         },
         {
-            accessorKey: 'instruction_set',
+            accessorKey: 'Instruction Set',
             header: 'Instruction Set',
             size: 40
         },
         {
-            accessorKey: 'tdp',
+            accessorKey: 'TDP',
             header: 'TDP',
             size: 40
         },
         {
-            accessorKey: 'product_collection',
+            accessorKey: 'Product Collection',
             header: 'Product Collection'
         },
         {
-            accessorKey: 'vertical_segment',
+            accessorKey: 'Vertical Segment',
             header: 'Vertical Segment',
             size: 40
         },
         {
-            accessorKey: 'launch_date',
+            accessorKey: 'Launch Date',
             header: 'Launch Date',
             size: 40
         }
@@ -126,9 +126,9 @@ const NewTable = () => {
     };
 
     const handleMoreDetails = (rows) => {
-        const rowIDs = rows.map((row) => row.original.processor_id);
+        const rowIDs = rows.map((row) => row.original["Processor ID"]);
         // console.log(rowData)
-        navigate(`/compare_processor/${rowIDs}`)
+        navigate(`/processor/${rowIDs}`)
     };
 
     const handleExportData = () => {

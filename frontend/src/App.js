@@ -18,7 +18,7 @@ function App() {
         <Route exact path="/" element={ <Dashboard/> } />
         <Route path="graph" element={ <Graph/> } />
         <Route path="table" element={ <NewTable/> } />
-        <Route path="compare_processor/:rowIDs" element={ <CompareTable/> }/>
+        <Route path="processor/:rowIDs" element={ <CompareTable/> }/>
       </Routes>
     </div>
   );

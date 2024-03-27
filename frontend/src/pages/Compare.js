@@ -19,7 +19,7 @@ const CompareTable = () => {
     useEffect(() => {
         const fetch_table_data = async () => {
             try {
-                const res = await axios.get(`/compare_processors/${rowIDs}`);
+                const res = await axios.get(`/processors/${rowIDs}`);
                 // setHeaders(res.data["features"])
                 setProcessors(res.data["processors"]);
 				setData(res.data["broken_processors"])
@@ -51,7 +51,7 @@ const CompareTable = () => {
 			}
 		};
 
-		moveToFront(keys, "Name");
+		moveToFront(keys, "Processor Name");
   		moveToFront(keys, "Processor ID");
 
 		// Map over the keys and create columns for each section

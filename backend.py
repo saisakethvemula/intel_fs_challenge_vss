@@ -12,10 +12,12 @@ collection = db.processor_config
 #inserting data into collection
 # with open(r"./API_DATA.json") as f:
 #     json_data = json.load(f)
-# data_list = [{"processor_id": k, **v} for k, v in json_data.items()]
-# print(data_list[0:10])
+# processor_data = []
+# for pid, feature in json_data.items():
+#     processor_data.append({"Processor ID": pid, "Processor Name": feature.pop("name"), **feature})
+# print(processor_data[0:10])
 # _ = collection.delete_many({})
-# result = collection.insert_many(data_list)
+# result = collection.insert_many(processor_data)
 # print("Inserted document IDs:", result.inserted_ids)
 
 
@@ -28,16 +30,17 @@ def get_graph_data():
             {"$project": {"_id": 0, "product_collection": "$Essentials.Product Collection", "num_cores": "$Performance.# of Cores"}}
         ]
         data = list(collection.aggregate(query_pipeline))
-        # return jsonify(data), 200
-        
+        #return jsonify(data), 200
         #clean and aggregate the counts of unique cores for every unique product collection
         unique_cores = set()
         prod_collection = []
+        # getting all unique core counts available in the processors data
         for processor in data:
             if "num_cores" not in processor.keys():
                 continue
             unique_cores.add(processor["num_cores"])
         cores_collection = {x+" Cores": [] for x in unique_cores}
+        #aggregating the count of the cores for every processor
         for processor in data:
             if "num_cores" not in processor.keys():
                 continue
@@ -71,60 +74,63 @@ def get_graph_data():
 def get_table_data():
     try:
         #table data
-        query_pipeline = [{"$project": {"_id": 0, "processor_id": {"$toInt": "$processor_id"}, "name": 1, "product_collection": "$Essentials.Product Collection", \
-            "status": "$Essentials.Status", "vertical_segment": "$Essentials.Vertical Segment", "launch_date": "$Essentials.Launch Date", "num_cores": {"$toInt":"$Performance.# of Cores"}, \
-            "base_frequency": "$Performance.Processor Base Frequency", "cache": "$Performance.Cache", "tdp": "$Performance.TDP", \
-            "lithography": "$Essentials.Lithography", "instruction_set": "$Advanced Technologies.Instruction Set"}}]
+        #aggregating data for displaying in table
+        query_pipeline = [{"$project": {"_id": 0, "Processor ID": {"$toInt": "$Processor ID"}, "Processor Name": 1, "Product Collection": "$Essentials.Product Collection", \
+            "Status": "$Essentials.Status", "Vertical Segment": "$Essentials.Vertical Segment", "Launch Date": "$Essentials.Launch Date", "Number of Cores": {"$toInt":"$Performance.# of Cores"}, \
+            "Base Frequency": "$Performance.Processor Base Frequency", "Cache": "$Performance.Cache", "TDP": "$Performance.TDP", \
+            "Lithography": "$Essentials.Lithography", "Instruction Set": "$Advanced Technologies.Instruction Set"}}]
         data = list(collection.aggregate(query_pipeline))
         return jsonify(data), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# @app.route('/processors/<processorIDs>', methods=['GET'])
+# def get_processors(processorIDs):
+#     try:
+#         pids = processorIDs.split(",")
+#         query_pipeline = [{"$match": {"Processor ID": {"$in": pids}}}, \
+#             {"$project": {"_id": 0}} ]
+#         data = list(collection.aggregate(query_pipeline))
+#         return jsonify(data), 200
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 
 @app.route('/processors/<processorIDs>', methods=['GET'])
 def get_processors(processorIDs):
     try:
+        #api for lazy loading
+        #sending detailed processor data only on request
         pids = processorIDs.split(",")
-        query_pipeline = [{"$match": {"processor_id": {"$in": pids}}}, \
-            {"$project": {"_id": 0}} ]
-        data = list(collection.aggregate(query_pipeline))
-        return jsonify(data), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/compare_processors/<processorIDs>', methods=['GET'])
-def get_compare_processors(processorIDs):
-    try:
-        pids = processorIDs.split(",")
-        query_pipeline = [{"$match": {"processor_id": {"$in": pids}}}, \
+        query_pipeline = [{"$match": {"Processor ID": {"$in": pids}}}, \
             {"$project": {"_id": 0}} ]
         data = list(collection.aggregate(query_pipeline))
         
+        #getting unique features of processors for table header
         main_features = list({feature for processor in data for feature in processor.keys()})
 
+        #transforming the data to suit the table column names
         final_transformed = {}
-        
         for feature in main_features:
-            if feature == "name" or feature == "processor_id":
+            if feature == "Processor Name" or feature == "Processor ID":
                 continue
             final_transformed[feature] = []
             for item in data:
                 final_transformed[feature].append(item.get(feature, {}))
-        
-        final_transformed["Name"] = []
+        #transforming the data to dynamically update in table
+        final_transformed["Processor Name"] = []
         final_transformed["Processor ID"] = []
         for processor in data:
-            final_transformed["Name"].append({"Name":processor["name"]})
-            final_transformed["Processor ID"].append({"Processor ID":processor["processor_id"]})
-
+            final_transformed["Processor Name"].append({"Processor Name":processor["Processor Name"]})
+            final_transformed["Processor ID"].append({"Processor ID":processor["Processor ID"]})
+        
+        #transforming the data to dynamically update in table rows
         broken_data = []
         for processor in data:
             curr_processor  = {}
             for feature, feature_info in processor.items():
-                if feature == "name":
-                    curr_processor["Name"] = processor["name"]
-                elif feature == "processor_id":
-                    curr_processor["Processor ID"] = processor["processor_id"]
+                if feature == "Processor Name" or feature == "Processor ID":
+                    curr_processor[feature] = processor[feature]
                 else:
                     for ad_feature, ad_feature_info in feature_info.items():
                         curr_processor[ad_feature] = ad_feature_info
