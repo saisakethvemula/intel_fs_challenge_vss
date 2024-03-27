@@ -10,6 +10,7 @@ import { Box, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv'; 
+import Table from './Table';
 
 //Lazy loading has been implemented by fetching additional data from database only when requested
 
@@ -19,9 +20,10 @@ const csvConfig = mkConfig({
     useKeysAsHeaders: true,
 });
 
-const CompareTable = () => {
-	//getting rowIDs which are the processor IDs
-    const { rowIDs }= useParams();
+const CompareTable = ({ processorIDs }) => {
+	//getting processorIDs
+    // const { processorIDs } = useParams();
+	console.log(processorIDs);
     const navigate = useNavigate();
     // const [headers, setHeaders] = useState([]);
     const [processors, setProcessors] = useState([]);
@@ -31,7 +33,7 @@ const CompareTable = () => {
     useEffect(() => {
         const fetch_table_data = async () => {
             try {
-                const res = await axios.get(`/processors/${rowIDs}`);
+                const res = await axios.get(`/processors/${processorIDs}`);
                 // setHeaders(res.data["features"])
                 setProcessors(res.data["processors"]);
 				setData(res.data["broken_processors"])
@@ -50,7 +52,7 @@ const CompareTable = () => {
             }
         };
         fetch_table_data();
-    }, [rowIDs]);
+    }, [processorIDs]);
 
 	//dynamically setting the column headers and the column names from the processor data we got
     const columns = useMemo(() => {
@@ -117,9 +119,9 @@ const CompareTable = () => {
 				flexWrap: 'wrap',
 				}}
 			>
-				<Button onClick={() => handleGoBack()}>
+				{/* <Button onClick={() => handleGoBack()}>
                     <ArrowBackIcon />
-                </Button>
+                </Button> */}
 				<Button
 				//export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
 				onClick={handleExportData}
@@ -160,9 +162,9 @@ const CompareTable = () => {
     });
 
 	//go back to table
-	const handleGoBack = () => {
-        navigate(`/table`)
-    };
+	// const handleGoBack = () => {
+    //     navigate(`/table`)
+    // };
 
     return (
 			<MaterialReactTable table={table} />

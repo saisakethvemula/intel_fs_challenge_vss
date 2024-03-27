@@ -9,7 +9,9 @@ import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import InfoIcon from '@mui/icons-material/Info';
-import { mkConfig, generateCsv, download } from 'export-to-csv'; 
+import { mkConfig, generateCsv, download } from 'export-to-csv';
+import CompareTable from './CompareTable'; 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 //Table component with Pagination, filtering, search, lazy loading and allowing users to select two rows to compare
 
@@ -23,7 +25,9 @@ const Table = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [comparetable, setCompareTable] = useState(false);
     const [data, setData] = useState([]);
+    const [processorIDs, setProcessorIDs] = useState([]);
 
     //getting the table data by calling the table api which queries the mongodb to send relevant data
     useEffect(() => {
@@ -132,11 +136,20 @@ const Table = () => {
         download(csvConfig)(csv);
     };
 
-    //navigating to compare table
+    //opening compare table
     const handleMoreDetails = (rows) => {
-        const rowIDs = rows.map((row) => row.original["Processor ID"]);
+        setProcessorIDs(rows.map((row) => row.original["Processor ID"]));
         // console.log(rowData)
-        navigate(`/processor/${rowIDs}`)
+        // navigate(`/processor/${rowIDs}`)
+        setCompareTable(true);
+    };
+
+    //closing compare table
+    const handleGoBack = (rows) => {
+        // setProcessorIDs(rows.map((row) => row.original["Processor ID"]));
+        // console.log(rowData)
+        // navigate(`/processor/${rowIDs}`)
+        setCompareTable(false);
     };
 
     //setting up the component's table parameter with all essential features
@@ -215,7 +228,23 @@ const Table = () => {
         ),
     });
 
-    return <MaterialReactTable table={table} />;
+    return (
+        <>
+            {
+                comparetable ? (
+                    <>
+                        <div style={{ textAlign: 'left' }}>
+                            <Button onClick={() => handleGoBack()}>
+                                <ArrowBackIcon />
+                            </Button>
+                        </div>
+                        <CompareTable processorIDs={processorIDs} />
+                    </>
+                ) : 
+                <MaterialReactTable table={table} />
+            }
+        </>
+    );
 };
 
 export default Table;
