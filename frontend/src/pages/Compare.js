@@ -8,14 +8,26 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { mkConfig, generateCsv, download } from 'export-to-csv'; 
+
+//Lazy loading has been implemented by fetching additional data from database only when requested
+
+const csvConfig = mkConfig({
+    fieldSeparator: ',',
+    decimalSeparator: '.',
+    useKeysAsHeaders: true,
+});
 
 const CompareTable = () => {
+	//getting rowIDs which are the processor IDs
     const { rowIDs }= useParams();
     const navigate = useNavigate();
     // const [headers, setHeaders] = useState([]);
     const [processors, setProcessors] = useState([]);
 	const [data, setData] = useState([]);
 
+	//calling the processors api with the ids as parameter which queries the mongodb to send relevant data
     useEffect(() => {
         const fetch_table_data = async () => {
             try {
@@ -40,26 +52,25 @@ const CompareTable = () => {
         fetch_table_data();
     }, [rowIDs]);
 
+	//dynamically setting the column headers and the column names from the processor data we got
     const columns = useMemo(() => {
-		const keys = Object.keys(processors); // Get the keys of the main data object
+		const features = Object.keys(processors);
 
-		const moveToFront = (arr, key) => {
-			const index = arr.indexOf(key);
+		const move_to_starting = (features_arr, key) => {
+			const index = features_arr.indexOf(key);
 			if (index > -1) {
-			  arr.splice(index, 1);
-			  arr.unshift(key);
+				features_arr.splice(index, 1);
+				features_arr.unshift(key);
 			}
 		};
 
-		moveToFront(keys, "Processor Name");
-  		moveToFront(keys, "Processor ID");
+		move_to_starting(features, "Processor Name");
+		move_to_starting(features, "Processor ID");
 
-		// Map over the keys and create columns for each section
-		return keys.map(key => {
-			const section = processors[key]; // Get the data for the current section
-			const subKeys = Object.keys(section[0]); // Get the keys of the first item in the section
+		return features.map(key => {
+			const section = processors[key]; 
+			const subKeys = Object.keys(section[0]); 
 			
-			// Map over the subKeys and create columns for each property
 			const subColumns = subKeys.map(subKey => ({
 			accessorKey: subKey,
 			header: subKey,
@@ -77,14 +88,26 @@ const CompareTable = () => {
     // const columns = []
     // const data = {}
 
+	//functionality to export as CSV
+    const handleExportRows = (rows) => {
+        const rowData = rows.map((row) => row.original);
+        const csv = generateCsv(csvConfig)(rowData);
+        download(csvConfig)(csv);
+    };
 
+    const handleExportData = () => {
+        const csv = generateCsv(csvConfig)(data);
+        download(csvConfig)(csv);
+    };
+
+	//setting up the component's table parameter with all essential features
     const table = useMaterialReactTable({
         columns,
         data,
-        enableColumnActions: false,
-        enableColumnFilters: false,
-        enablePagination: false,
-        enableSorting: false,
+        enableRowSelection: true,
+        columnFilterDisplayMode: 'popover',
+        paginationDisplayMode: 'pages',
+        positionToolbarAlertBanner: 'bottom',
 		renderTopToolbarCustomActions: ({ table }) => (
 			<Box
 				sx={{
@@ -97,10 +120,46 @@ const CompareTable = () => {
 				<Button onClick={() => handleGoBack()}>
                     <ArrowBackIcon />
                 </Button>
+				<Button
+				//export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+				onClick={handleExportData}
+				startIcon={<FileDownloadIcon />}
+				>
+					Export All Data
+				</Button>
+				<Button
+				disabled={table.getPrePaginationRowModel().rows.length === 0}
+				//export all rows, including from the next page, (still respects filtering and sorting)
+				onClick={() =>
+					handleExportRows(table.getPrePaginationRowModel().rows)
+				}
+				startIcon={<FileDownloadIcon />}
+				>
+					Export All Rows
+				</Button>
+				<Button
+				disabled={table.getRowModel().rows.length === 0}
+				//export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+				onClick={() => handleExportRows(table.getRowModel().rows)}
+				startIcon={<FileDownloadIcon />}
+				>
+					Export Page Rows
+				</Button>
+				<Button
+				disabled={
+					!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+				}
+				//only export selected rows
+				onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+				startIcon={<FileDownloadIcon />}
+				>
+					Export Selected Rows
+				</Button>
 			</Box>
 		),
     });
 
+	//go back to table
 	const handleGoBack = () => {
         navigate(`/table`)
     };

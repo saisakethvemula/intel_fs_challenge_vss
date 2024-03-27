@@ -11,13 +11,13 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import InfoIcon from '@mui/icons-material/Info';
 import { mkConfig, generateCsv, download } from 'export-to-csv'; 
 
+//Table component with Pagination, filtering, search, lazy loading and allowing users to select two rows to compare
+
 const csvConfig = mkConfig({
     fieldSeparator: ',',
     decimalSeparator: '.',
     useKeysAsHeaders: true,
 });
-
-const statusList = ["Announced", "Discontinued", "Launched"]
 
 const NewTable = () => {
     // const [loading, setLoading] = useState(true);
@@ -25,6 +25,7 @@ const NewTable = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
 
+    //getting the table data by calling the table api which queries the mongodb to send relevant data
     useEffect(() => {
         const fetch_table_data = async () => {
             try {
@@ -47,7 +48,7 @@ const NewTable = () => {
         fetch_table_data();
     }, []);
 
-
+    //setting up column names and adjusting sizes, types and filtering options
     const columns = useMemo(
     () => [
         {
@@ -66,7 +67,7 @@ const NewTable = () => {
             header: 'Status',
             size: 40,
             filterVariant: 'select',
-            filterSelectOptions: statusList,
+            filterSelectOptions: ["Announced", "Discontinued", "Launched"],
         },
         {
             accessorKey: 'Number of Cores',
@@ -119,16 +120,11 @@ const NewTable = () => {
     [],
     );
 
+    //functionality to export as CSV
     const handleExportRows = (rows) => {
         const rowData = rows.map((row) => row.original);
         const csv = generateCsv(csvConfig)(rowData);
         download(csvConfig)(csv);
-    };
-
-    const handleMoreDetails = (rows) => {
-        const rowIDs = rows.map((row) => row.original["Processor ID"]);
-        // console.log(rowData)
-        navigate(`/processor/${rowIDs}`)
     };
 
     const handleExportData = () => {
@@ -136,6 +132,14 @@ const NewTable = () => {
         download(csvConfig)(csv);
     };
 
+    //navigating to compare table
+    const handleMoreDetails = (rows) => {
+        const rowIDs = rows.map((row) => row.original["Processor ID"]);
+        // console.log(rowData)
+        navigate(`/processor/${rowIDs}`)
+    };
+
+    //setting up the component's table parameter with all essential features
     const table = useMaterialReactTable({
         columns,
         data,

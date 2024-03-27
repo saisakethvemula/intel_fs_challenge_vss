@@ -6,6 +6,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 
+//Graph component to fetch data from backend and display in bar and pie chart
+//Bar chart represents the distribution of processor counts based on the number of cores across the product collection.
+//Pie chart represents the distribution of the status of various processors.
+
+//configuration for bar chart
 const chartSetting = {
     yAxis: [
         {
@@ -29,7 +34,7 @@ const Graph = () => {
     const [piedata, setPiedata] = useState([]);
     const [ylabels, setYlabels] = useState([]);
 
-    // fetching data from graph api using useEffect for both bar and pie charts
+    //fetching data from graph api using useEffect for both bar and pie charts by querying the mongodb to send relevant data
     useEffect(() => {
         const fetch_graph_data = async () => {
             try {
@@ -55,7 +60,7 @@ const Graph = () => {
         fetch_graph_data();
     }, []);
     
-    // transforming the data to put in the chart components
+    // transforming the data to put in the bar chart components
     const transformed_bar_data = [];
     for (const key in ylabels) {
         const pData = ylabels[key];
