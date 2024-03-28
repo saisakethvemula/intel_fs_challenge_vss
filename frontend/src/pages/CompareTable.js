@@ -4,13 +4,13 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from 'react-router-dom';
+// import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv'; 
-import Table from './Table';
+// import Table from './Table';
 
 //Lazy loading has been implemented by fetching additional data from database only when requested
 
@@ -24,7 +24,7 @@ const CompareTable = ({ processorIDs }) => {
 	//getting processorIDs
     // const { processorIDs } = useParams();
 	console.log(processorIDs);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     // const [headers, setHeaders] = useState([]);
     const [processors, setProcessors] = useState([]);
 	const [data, setData] = useState([]);

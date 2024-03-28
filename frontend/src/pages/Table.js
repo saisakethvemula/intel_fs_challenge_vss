@@ -4,7 +4,7 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import React, { useEffect, useState } from "react"
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -24,7 +24,7 @@ const csvConfig = mkConfig({
 const Table = () => {
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [comparetable, setCompareTable] = useState(false);
     const [data, setData] = useState([]);
     const [processorIDs, setProcessorIDs] = useState([]);
