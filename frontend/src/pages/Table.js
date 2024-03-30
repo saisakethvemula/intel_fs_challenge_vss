@@ -134,10 +134,12 @@ const Table = () => {
     [],
     );
 
+    //hook to achieve storing & editing in local storage
     async function updateProcessor(values) {
         // localStorage.removeItem("processors");
         let stored_processors = localStorage.getItem('processors') ? JSON.parse(localStorage.getItem('processors')) : [];
         console.log("Before", stored_processors)
+        //if processor already stored in local storage, edit it
         for (const processor in stored_processors){
             if (processor["Processor ID"] === values["Processor ID"]){
                 delete stored_processors[processor];
@@ -149,6 +151,7 @@ const Table = () => {
         console.log("After", JSON.parse(localStorage.getItem('processors')))
     }
 
+    //handling saving after editing
     const handleSaveProcessor: MRT_TableOptions<User>['onEditingRowSave'] = async ({
         values,
         table,
