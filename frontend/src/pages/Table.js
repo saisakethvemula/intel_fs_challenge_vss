@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import {
-  MaterialReactTable,
-  useMaterialReactTable,
+    type MRT_TableOptions,
+    MaterialReactTable,
+    useMaterialReactTable,
 } from 'material-react-table';
 import React, { useEffect, useState } from "react"
 // import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import CompareTable from './CompareTable'; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+// import EditIcon from '@mui/icons-material/Edit';
 
 //Table component with Pagination, filtering, search, lazy loading and allowing users to select two rows to compare
 
@@ -59,11 +61,13 @@ const Table = () => {
             accessorKey: 'Processor ID',
             header: 'Processor ID',
             type: 'numeric',
+            enableEditing: false,
             size: 40
         },
         {
             accessorKey: 'Processor Name',
             header: 'Processor Name',
+            enableEditing: false,
             size: 200
         },
         {
@@ -72,6 +76,8 @@ const Table = () => {
             size: 40,
             filterVariant: 'select',
             filterSelectOptions: ["Announced", "Discontinued", "Launched"],
+            editVariant: 'select',
+            editSelectOptions: ["Announced", "Discontinued", "Launched"]
         },
         {
             accessorKey: 'Number of Cores',
@@ -113,7 +119,11 @@ const Table = () => {
         {
             accessorKey: 'Vertical Segment',
             header: 'Vertical Segment',
-            size: 40
+            size: 40,
+            filterVariant: 'select',
+            filterSelectOptions: ["Server", "Desktop", "Mobile"],
+            editVariant: 'select',
+            editSelectOptions: ["Server", "Desktop", "Mobile"]
         },
         {
             accessorKey: 'Launch Date',
@@ -123,6 +133,29 @@ const Table = () => {
     ],
     [],
     );
+
+    async function updateProcessor(values) {
+        // localStorage.removeItem("processors");
+        let stored_processors = localStorage.getItem('processors') ? JSON.parse(localStorage.getItem('processors')) : [];
+        console.log("Before", stored_processors)
+        for (const processor in stored_processors){
+            if (processor["Processor ID"] === values["Processor ID"]){
+                delete stored_processors[processor];
+                break;
+            }
+        }
+        stored_processors.push(values);
+        localStorage.setItem('processors', JSON.stringify(stored_processors));
+        console.log("After", JSON.parse(localStorage.getItem('processors')))
+    }
+
+    const handleSaveProcessor: MRT_TableOptions<User>['onEditingRowSave'] = async ({
+        values,
+        table,
+    }) => {
+        await updateProcessor(values);
+        table.setEditingRow(null); //exit editing mode
+    };
 
     //functionality to export as CSV
     const handleExportRows = (rows) => {
@@ -160,6 +193,9 @@ const Table = () => {
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
         positionToolbarAlertBanner: 'bottom',
+        enableEditing: true,
+        getRowId: (row) => row["Processor ID"],
+        onEditingRowSave: handleSaveProcessor,
         renderTopToolbarCustomActions: ({ table }) => (
         <Box
             sx={{
