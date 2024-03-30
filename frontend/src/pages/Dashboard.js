@@ -63,6 +63,20 @@ const Dashboard = () => {
                     </React.Fragment> 
                 </Card>
             </Box>
+            <Box sx={{ minWidth: 275, padding: 2 }}>
+                <Card variant="outlined">
+                    <React.Fragment>
+                        <CardContent>
+                            <Typography variant="h6" component="div">
+                                Bonus Question
+                            </Typography>
+                            <Typography variant="body2">
+                                I have also allowed users to edit data in the table and handled it to store the data in localStorage of the browser. When the useer clicks on the edit icon in table page, they are allowed to edit features except Processor ID and Name which will be saved in localStorage based on the processsor id, overwrites if already exists in the localStorage and fetches again when requested.
+                            </Typography>
+                        </CardContent>
+                    </React.Fragment> 
+                </Card>
+            </Box>
         </div>
     );
 }
