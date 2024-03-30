@@ -11,6 +11,10 @@
 chmod +x install_dependencies.sh
 ./install_dependencies.sh
 ```
+If you are getting errors when installing the npm packages, try using 
+```bash
+npm install --force
+```
 
 2. To run the application:
 Backend:
