@@ -5,6 +5,24 @@
     Backend: Python & Flask
     Database: MongoDB Atlas
 
+# Running the application
+1. To install dependencies: 
+```bash
+chmod +x install_dependencies.sh
+./install_dependencies.sh
+```
+
+2. To run the application:
+Backend:
+```bash
+python3 backend/backend.py
+```
+Frontend:
+```frontend
+cd frontend
+npm start
+```
+
 # Tasks achieved
 
 # SPA with Routing
