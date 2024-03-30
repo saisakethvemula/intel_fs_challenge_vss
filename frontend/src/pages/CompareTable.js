@@ -22,10 +22,7 @@ const csvConfig = mkConfig({
 
 const CompareTable = ({ processorIDs }) => {
 	//getting processorIDs
-    // const { processorIDs } = useParams();
-	console.log(processorIDs);
-    // const navigate = useNavigate();
-    // const [headers, setHeaders] = useState([]);
+	// console.log(processorIDs);
     const [processors, setProcessors] = useState([]);
 	const [data, setData] = useState([]);
 
@@ -33,13 +30,25 @@ const CompareTable = ({ processorIDs }) => {
     useEffect(() => {
         const fetch_table_data = async () => {
             try {
-                const res = await axios.get(`/processors/${processorIDs}`);
-                // setHeaders(res.data["features"])
-                setProcessors(res.data["processors"]);
-				setData(res.data["broken_processors"])
-                // setLoading(false);
+				//using local storage to cache the data of fetched processors to reduce network load
+				// localStorage.removeItem("processors_all");
+				// localStorage.removeItem("processors_headers");
+				// localStorage.removeItem("pids");
+				let stored_processors = localStorage.getItem('processors_all') ? JSON.parse(localStorage.getItem('processors_all')) : [];
+				let stored_headers = localStorage.getItem('processors_headers') ? JSON.parse(localStorage.getItem('processors_headers')) : {};
+				let stored_pids = localStorage.getItem('pids') ? JSON.parse(localStorage.getItem('pids')) : [];
+				const new_pids = processorIDs.filter(pid => !stored_pids.includes(pid));
+				const filter_processors = stored_processors.filter(processor => processorIDs.includes(parseInt(processor["Processor ID"])));
+				const res = await axios.get(`/processors/${new_pids}`);
+				// console.log(res.data);
+				const final_data = [...res.data["broken_processors"], ...filter_processors];
+				setProcessors(Object.assign({}, stored_headers, res.data["processors"]));
+				setData(final_data);
+				localStorage.setItem("processors_all", JSON.stringify([...res.data["broken_processors"], ...stored_processors]));
+				localStorage.setItem("processors_headers", JSON.stringify(Object.assign({}, stored_headers, res.data["processors"])));
+				localStorage.setItem("pids", JSON.stringify([...stored_pids, ...new_pids]));
+				// setLoading(false);
                 // setError(null);
-                console.log(res.data);
                 if (res.data.error) {
                     console.log(res.data.error);
                 }

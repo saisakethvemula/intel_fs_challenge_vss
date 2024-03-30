@@ -11,6 +11,13 @@ import Table from './pages/Table';
 // import CompareTable from './pages/CompareTable';
 
 function App() {
+
+  //clearing localstorage of previous run
+  localStorage.removeItem("processors");
+  localStorage.removeItem("processors_all");
+  localStorage.removeItem("processors_headers");
+  localStorage.removeItem("pids");
+
   return (
     <div className="App">
       <Navbar />

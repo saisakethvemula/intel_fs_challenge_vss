@@ -71,7 +71,7 @@ const Dashboard = () => {
                                 Bonus Question
                             </Typography>
                             <Typography variant="body2">
-                                I have also allowed users to edit data in the table and handled it to store the data in localStorage of the browser. When the useer clicks on the edit icon in table page, they are allowed to edit features except Processor ID and Name which will be saved in localStorage based on the processsor id, overwrites if already exists in the localStorage and fetches again when requested.
+                                I have also allowed users to edit data in the table and handled it to store the data in localStorage of the browser. When the useer clicks on the edit icon in table page, they are allowed to edit features except Processor ID and Name which will be saved in localStorage based on the processsor id, overwrites if already exists in the localStorage and fetches again when requested. This change will not be updated in database. As an extra feature I have implemented caching to store the fetched processor details in local storage and retrieve existing processor data from it. LocalStorage has been set to empty when we kill the frontend process and will be empty on the next run.
                             </Typography>
                         </CardContent>
                     </React.Fragment> 

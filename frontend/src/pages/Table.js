@@ -39,7 +39,7 @@ const Table = () => {
                 setData(res.data);
                 // setLoading(false);
                 // setError(null);
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data.error) {
                     console.log(res.data.error);
                 }
@@ -138,7 +138,7 @@ const Table = () => {
     async function updateProcessor(values) {
         // localStorage.removeItem("processors");
         let stored_processors = localStorage.getItem('processors') ? JSON.parse(localStorage.getItem('processors')) : [];
-        console.log("Before", stored_processors)
+        // console.log("Before", stored_processors)
         //if processor already stored in local storage, edit it
         for (const processor in stored_processors){
             if (processor["Processor ID"] === values["Processor ID"]){
@@ -148,7 +148,7 @@ const Table = () => {
         }
         stored_processors.push(values);
         localStorage.setItem('processors', JSON.stringify(stored_processors));
-        console.log("After", JSON.parse(localStorage.getItem('processors')))
+        // console.log("After", JSON.parse(localStorage.getItem('processors')))
     }
 
     //handling saving after editing

@@ -96,11 +96,14 @@ def get_table_data():
 #     except Exception as e:
 #         return jsonify({"error": str(e)}), 500
 
+@app.route('/processors/')
 @app.route('/processors/<processorIDs>', methods=['GET'])
-def get_processors(processorIDs):
+def get_processors(processorIDs=None):
     try:
         #api for lazy loading
         #sending detailed processor data only on request
+        if processorIDs is None:
+            return jsonify({"processors": [], "broken_processors": []}), 200
         pids = processorIDs.split(",")
         query_pipeline = [{"$match": {"Processor ID": {"$in": pids}}}, \
             {"$project": {"_id": 0}} ]
